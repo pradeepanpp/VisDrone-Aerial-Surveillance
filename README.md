@@ -19,9 +19,18 @@ The system was validated on a representative subset of the **VisDrone-DET Datase
 The dashboard provides real-time tactical overlays with bounding boxes and confidence scores for detected vehicles.
 
 <div align="center">
-  <img src="assets/app_demo.png" alt="Forensic App Interface" width="800"/>
+  <img width="1920" height="974" alt="image01" src="https://github.com/user-attachments/assets/d6e1883e-74df-447d-93a2-797ae04cbcfc" /
   <br>
-  <em>Fig 1: Tactical visualization of the inference engine resolving multi-scale targets in a high-clutter urban environment.</em>
+  <em>Fig 1: Automated API documentation showing the /predict endpoint for real-time target ingestion.</em>
+</div>
+
+## 🔍 Qualitative Performance Analysis
+
+<div align="center">
+  <img width="1920" height="980" alt="image02" src="https://github.com/user-attachments/assets/b6ded9e9-efb8-45bd-904f-965300ea82b6" />
+
+  <br>
+  <em>Fig 2: Tactical visualization of the Anchor-Optimized Faster R-CNN resolving multiple small-scale vehicles in a high-clutter urban environment with high confidence scores.</em>
 </div>
 
 
