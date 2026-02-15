@@ -1,1 +1,62 @@
-# VisDrone-Aerial-Surveillance
+<div align="center">
+
+# Real-Time Aerial Surveillance Pipeline (VisDrone)
+### *Optimized Object Detection for Small-Scale Aerial Targets*
+
+[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0-ee4c2c.svg)](https://pytorch.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.95-05998b.svg)](https://fastapi.tiangolo.com/)
+[![MLOps](https://img.shields.io/badge/MLOps-DVC-red.svg)](https://dvc.org/)
+
+</div>
+
+## 📌 Project Abstract
+This repository implements an end-to-end MLOps pipeline for aerial object detection, focusing on the identification of ground vehicles from high-altitude drone imagery. I utilized a **Faster R-CNN (ResNet-50 FPN)** architecture, specifically optimized to address the "Small Object Problem" inherent in aerial perspectives.
+
+The system was validated on a representative subset of the **VisDrone-DET Dataset**. By mathematically realigning the **Anchor Generator scales to 16px**, I improved the model's sensitivity to tiny targets that occupy a minimal pixel footprint. The final system is served via a high-performance **FastAPI** wrapper and containerized with **Docker** for edge-ready deployment.
+
+## 🖥️ Live Inference Proof
+The dashboard provides real-time tactical overlays with bounding boxes and confidence scores for detected vehicles.
+
+<div align="center">
+  <img src="assets/app_demo.png" alt="Forensic App Interface" width="800"/>
+  <br>
+  <em>Fig 1: Tactical visualization of the inference engine resolving multi-scale targets in a high-clutter urban environment.</em>
+</div>
+
+
+
+## ⚙️ Modular MLOps Workflow
+To ensure scientific reproducibility, the project maintains a strictly decoupled architecture:
+- **Data Engine**: Custom parser for raw VisDrone telemetry with a built-in vehicle heuristic filter.
+- **Architectural Layer**: Parameterized RPN (Region Proposal Network) with custom anchor scales.
+- **Orchestration**: Managed via **DVC**, establishing a Directed Acyclic Graph (DAG) from ingestion to evaluation.
+- **Deployment**: Production-ready **FastAPI** service with automated Swagger documentation.
+
+## 🚀 Execution Guide
+
+## 1. Environment Setup
+
+### Create a dedicated environment
+conda create -n visdrone python=3.12 -y
+
+conda activate visdrone
+
+### Install requirements
+pip install -r requirements.txt
+
+pip install -e .
+
+## 2. Pipeline Reproduction (DVC)
+The pipeline automatically handles data split (80/20) and training:
+
+dvc init
+
+dvc repro
+
+## 3. Production API Launch
+Start the FastAPI server for local testing:
+
+python main.py
+
+Access the interactive API dashboard at http://localhost:8080/docs

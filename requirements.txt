@@ -1,0 +1,15 @@
+pandas
+numpy
+setuptools
+Pillow
+torch
+torchvision
+opencv-python-headless
+dvc
+tensorboard
+tqdm
+torchmetrics
+pycocotools
+fastapi[all]
+uvicorn
+gdown
