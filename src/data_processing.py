@@ -16,14 +16,14 @@ class VisDroneDataset(Dataset):
     Optimized for Aerial Vehicle Detection at 960x960 resolution.
     """
     def __init__(self, root: str, device: str = "cpu", target_size=(960, 960)):
-        # PhD Logic: Handle nested directory structures
+     
         potential_nested_path = os.path.join(root, "visdrone")
         self.actual_root = potential_nested_path if os.path.exists(potential_nested_path) else root
         
         self.image_path = os.path.join(self.actual_root, "images")
         self.labels_path = os.path.join(self.actual_root, "annotations")
         self.device = device
-        self.target_size = target_size # (Width, Height)
+        self.target_size = target_size
 
         if not os.path.exists(self.image_path):
             logger.error(f"Image directory not found at: {self.image_path}")
@@ -35,7 +35,7 @@ class VisDroneDataset(Dataset):
 
     def __getitem__(self, idx):
         try:
-            # 1. Load Image
+      
             img_name = self.img_names[idx]
             image_full_path = os.path.join(self.image_path, img_name)
             image = cv2.imread(image_full_path)
@@ -43,19 +43,19 @@ class VisDroneDataset(Dataset):
             if image is None:
                 raise FileNotFoundError(f"Corrupt or missing image: {image_full_path}")
             
-            # --- CHANGE 1: RESOLUTION SCALING ---
+    
             h_orig, w_orig = image.shape[:2]
             image = cv2.resize(image, self.target_size, interpolation=cv2.INTER_AREA)
             
-            # Calculate scaling ratios for the bounding boxes
+         
             ratio_w = self.target_size[0] / w_orig
             ratio_h = self.target_size[1] / h_orig
             
             img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
-            img_res = img_rgb / 255.0  # Normalize
-            img_tensor = torch.as_tensor(img_res).permute(2, 0, 1) # (C, H, W)
+            img_res = img_rgb / 255.0 
+            img_tensor = torch.as_tensor(img_res).permute(2, 0, 1) 
 
-            # 2. Parse Corresponding Label
+         
             label_name = os.path.splitext(img_name)[0] + ".txt"
             label_full_path = os.path.join(self.labels_path, label_name)
 
@@ -76,20 +76,19 @@ class VisDroneDataset(Dataset):
                         parts = line.strip().split(',')
                         if len(parts) < 6: continue
                         
-                        # --- CHANGE 2: COORDINATE TRANSFORM ---
-                        # Multiply original coords by ratios to match new image size
+  
                         x_min = float(parts[0]) * ratio_w
                         y_min = float(parts[1]) * ratio_h
                         width = float(parts[2]) * ratio_w
                         height = float(parts[3]) * ratio_h
                         category = int(parts[5])
 
-                        # Vehicle Filter (4: Car, 5: Van, 6: Truck, 9: Bus)
+                 
                         if category in [4, 5, 6, 9]:
                             x_max = x_min + width
                             y_max = y_min + height
                             
-                            # Validation: Ensure box coordinates are valid after resize
+                    
                             if x_max > x_min and y_max > y_min:
                                 boxes.append([x_min, y_min, x_max, y_max])
                                 labels.append(1) 
@@ -101,7 +100,7 @@ class VisDroneDataset(Dataset):
                                  (target["boxes"][:, 2] - target["boxes"][:, 0])
                 target["iscrowd"] = torch.zeros((len(boxes),), dtype=torch.int64)
 
-            # 3. Transfer to Device
+
             img_tensor = img_tensor.to(self.device)
             for key in target:
                 target[key] = target[key].to(self.device)

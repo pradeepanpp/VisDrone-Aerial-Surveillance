@@ -4,7 +4,7 @@ sys.path.append(os.getcwd())
 
 import torch
 import time
-from tqdm import tqdm # PhD Visibility Tool
+from tqdm import tqdm 
 from torch.utils.data import DataLoader, random_split
 from torch import optim
 from torch.utils.tensorboard import SummaryWriter
@@ -26,7 +26,7 @@ class ModelTraining:
         self.dataset_path = dataset_path
         self.device = device
 
-        # Tensorboard
+  
         self.writer = SummaryWriter(log_dir=f"tensorboard_logs/{time.strftime('%Y%m%d-%H%M%S')}")
 
         try:
@@ -51,7 +51,7 @@ class ModelTraining:
             generator=torch.Generator().manual_seed(42)
         )
 
-        # CHANGE: Batch Size reduced to 2 for laptop stability
+ 
         self.train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True, collate_fn=self.collate_fn)
         self.val_loader = DataLoader(val_dataset, batch_size=2, shuffle=False, collate_fn=self.collate_fn)
 
@@ -66,7 +66,7 @@ class ModelTraining:
                 self.model.train()
                 epoch_loss = 0
                 
-                # CHANGE: Added TQDM Progress Bar
+        
                 progress_bar = tqdm(train_loader, desc=f"Epoch {epoch+1}/{self.epochs}")
 
                 for i, (images, targets) in enumerate(progress_bar):
@@ -83,14 +83,14 @@ class ModelTraining:
                     current_loss = losses.item()
                     epoch_loss += current_loss
                     
-                    # Update Progress Bar with current loss
+        
                     progress_bar.set_postfix(loss=f"{current_loss:.4f}")
                     self.writer.add_scalar("Loss/Train_Batch", current_loss, epoch * len(train_loader) + i)
 
                 avg_train_loss = epoch_loss / len(train_loader)
                 logger.info(f"Epoch {epoch+1} Finished | Avg Loss: {avg_train_loss:.4f}")
                 
-                # Save weights every epoch as a safety checkpoint
+    
                 torch.save(self.model.state_dict(), os.path.join(MODEL_SAVE_PATH, "fasterrcnn.pth"))
 
             self.writer.close()

@@ -1,4 +1,4 @@
-# Adds the project root directory to the python path
+
 
 import os
 import sys
@@ -18,13 +18,13 @@ class DataIngestion:
 
     def download_and_extract(self):
         try:
-            # Create ingestion directory
+      
             raw_dir = os.path.join(self.target_dir, "data_ingestion")
             os.makedirs(raw_dir, exist_ok=True)
             
             zip_path = os.path.join(raw_dir, "visdrone_data.zip")
             
-            # 1. Download from Google Drive using gdown
+         
             if not os.path.exists(zip_path):
                 logger.info(f"Downloading VisDrone subset from GDrive ID: {self.file_id}")
                 url = f'https://drive.google.com/uc?id={self.file_id}'
@@ -32,7 +32,7 @@ class DataIngestion:
             else:
                 logger.info("visdrone_data.zip already exists. Skipping download.")
 
-            # 2. Extraction Logic
+          
             extract_path = os.path.join(raw_dir, "VisDrone_Dataset")
             if not os.path.exists(extract_path):
                 logger.info(f"Extracting to {extract_path}...")

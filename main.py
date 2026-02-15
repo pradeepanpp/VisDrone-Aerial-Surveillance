@@ -8,17 +8,16 @@ import numpy as np
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import StreamingResponse
 from PIL import Image, ImageDraw, ImageFont
-from src.model_architecture import FasterRCNNModel # CRITICAL: Loads custom anchors
+from src.model_architecture import FasterRCNNModel 
 
-# --- 1. CONFIGURATION ---
+
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 MODEL_PATH = os.path.join("artifacts", "models", "fasterrcnn.pth")
 
-# --- 2. INITIALIZE API & MODEL ---
+
 app = FastAPI(title="VisDrone Aerial Surveillance API")
 
-# PhD Logic: Load the architecture with the 16px anchor optimization
-# num_classes = 2 (Background + Vehicle)
+
 model_factory = FasterRCNNModel(num_classes=2, device=DEVICE)
 model = model_factory.model
 
@@ -30,14 +29,14 @@ else:
 
 model.eval()
 
-# --- 3. INFERENCE ENGINE ---
+
 def predict_and_draw(image: Image.Image):
-    # Preprocessing
+
     img_rgb = image.convert("RGB")
     img_array = np.array(img_rgb) / 255.0
     img_tensor = torch.as_tensor(img_array).permute(2, 0, 1).float().unsqueeze(0).to(DEVICE)
 
-    # Prediction
+
     with torch.no_grad():
         predictions = model(img_tensor)
 
@@ -45,26 +44,26 @@ def predict_and_draw(image: Image.Image):
     boxes = prediction['boxes'].cpu().numpy()
     scores = prediction['scores'].cpu().numpy()
 
-    # Visualization
+
     draw = ImageDraw.Draw(img_rgb)
     
     detected_count = 0
     for box, score in zip(boxes, scores):
-        # 0.5 Threshold is standard for Aerial Surveillance high-altitude precision
+    
         if score > 0.5:
             detected_count += 1
             x_min, y_min, x_max, y_max = box
             
-            # Draw Tactical Red Box
+
             draw.rectangle([x_min, y_min, x_max, y_max], outline="red", width=3)
             
-            # Add Confidence Label
+  
             draw.text((x_min, y_min - 10), f"Vehicle: {score:.2f}", fill="red")
     
     print(f"[*] Analysis Complete: Detected {detected_count} targets.")
     return img_rgb
 
-# --- 4. ENDPOINTS ---
+
 
 @app.get("/")
 def read_root():
@@ -77,14 +76,14 @@ def read_root():
 
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)):
-    # Read uploaded image
+
     image_data = await file.read()
     image = Image.open(io.BytesIO(image_data))
 
-    # Run Sovereign Inference
+
     output_image = predict_and_draw(image)
 
-    # Convert back to streaming format
+
     img_byte_arr = io.BytesIO()
     output_image.save(img_byte_arr, format='JPEG')
     img_byte_arr.seek(0)
@@ -93,5 +92,5 @@ async def predict(file: UploadFile = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    # 8080 is the standard port for Azure/AWS deployment
+ 
     uvicorn.run(app, host="0.0.0.0", port=8080)
