@@ -11,7 +11,7 @@
 </div>
 
 ## 📌 Project Abstract
-This repository implements an end-to-end MLOps pipeline for aerial object detection, focusing on the identification of ground vehicles from high-altitude drone imagery. I utilized a **Faster R-CNN (ResNet-50 FPN)** architecture, specifically optimized to address the "Small Object Problem" inherent in aerial perspectives.
+This repository implements a modular detection pipeline for aerial target identification that is specifically designed for high-altitude drone imagery. Implemented an **anchor-optimized Faster R-CNN (ResNet-50 FPN)** architecture to address the "Small Object Problem" common in aerial telemetry. 
 
 The system was validated on a representative subset of the **VisDrone-DET Dataset**. By mathematically realigning the **Anchor Generator scales to 16px**, I improved the model's sensitivity to tiny targets that occupy a minimal pixel footprint. The final system is implemented via a high-performance **FastAPI** backend, providing an interactive interface for real-time forensic target analysis.
 
