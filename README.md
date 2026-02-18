@@ -6,14 +6,14 @@
 [![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0-ee4c2c.svg)](https://pytorch.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.95-05998b.svg)](https://fastapi.tiangolo.com/)
-[![MLOps](https://img.shields.io/badge/MLOps-DVC-red.svg)](https://dvc.org/)
+
 
 </div>
 
 ## 📌 Project Abstract
 This repository implements an end-to-end MLOps pipeline for aerial object detection, focusing on the identification of ground vehicles from high-altitude drone imagery. I utilized a **Faster R-CNN (ResNet-50 FPN)** architecture, specifically optimized to address the "Small Object Problem" inherent in aerial perspectives.
 
-The system was validated on a representative subset of the **VisDrone-DET Dataset**. By mathematically realigning the **Anchor Generator scales to 16px**, I improved the model's sensitivity to tiny targets that occupy a minimal pixel footprint. The final system is served via a high-performance **FastAPI** wrapper and containerized with **Docker** for edge-ready deployment.
+The system was validated on a representative subset of the **VisDrone-DET Dataset**. By mathematically realigning the **Anchor Generator scales to 16px**, I improved the model's sensitivity to tiny targets that occupy a minimal pixel footprint. The final system is implemented via a high-performance **FastAPI** backend, providing an interactive interface for real-time forensic target analysis.
 
 ## 🖥️ Live Inference Proof
 The dashboard provides real-time tactical overlays with bounding boxes and confidence scores for detected vehicles.
@@ -39,7 +39,6 @@ The dashboard provides real-time tactical overlays with bounding boxes and confi
 To ensure scientific reproducibility, the project maintains a strictly decoupled architecture:
 - **Data Engine**: Custom parser for raw VisDrone telemetry with a built-in vehicle heuristic filter.
 - **Architectural Layer**: Parameterized RPN (Region Proposal Network) with custom anchor scales.
-- **Orchestration**: Managed via **DVC**, establishing a Directed Acyclic Graph (DAG) from ingestion to evaluation.
 - **Deployment**: Production-ready **FastAPI** service with automated Swagger documentation.
 
 ## 🚀 Execution Guide
@@ -56,14 +55,8 @@ pip install -r requirements.txt
 
 pip install -e .
 
-## 2. Pipeline Reproduction (DVC)
-The pipeline automatically handles data split (80/20) and training:
 
-dvc init
-
-dvc repro
-
-## 3. Production API Launch
+## 2. Production API Launch
 Start the FastAPI server for local testing:
 
 python main.py
