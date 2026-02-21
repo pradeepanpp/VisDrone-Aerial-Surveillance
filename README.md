@@ -1,6 +1,6 @@
 <div align="center">
 
-# Real-Time Aerial Surveillance Pipeline (VisDrone)
+# Aerial Object Detection Pipeline (VisDrone)
 ### *Optimized Object Detection for Small-Scale Aerial Targets*
 
 [![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
@@ -11,9 +11,8 @@
 </div>
 
 ## 📌 Project Abstract
-This repository implements a modular detection pipeline for aerial target identification that is specifically designed for high-altitude drone imagery. Implemented an **anchor-optimized Faster R-CNN (ResNet-50 FPN)** architecture to address the "Small Object Problem" common in aerial telemetry. 
-
-The system was validated on a representative subset of the **VisDrone-DET Dataset**. By mathematically realigning the **Anchor Generator scales to 16px**, I improved the model's sensitivity to tiny targets that occupy a minimal pixel footprint. The final system is implemented via a high-performance **FastAPI** backend, providing an interactive interface for real-time forensic target analysis.
+This project implements a modular object detection pipeline for drone imagery (VisDrone-DET subset) using **Faster R-CNN (ResNet-50 FPN)**.  
+To improve detection of **small objects**, I tuned the **RPN anchor scales** (including a 16px scale) and exposed the model through a **FastAPI inference service** with a `/predict` endpoint and Swagger UI.
 
 ## 🖥️ Live Inference Proof
 The dashboard provides real-time tactical overlays with bounding boxes and confidence scores for detected vehicles.
@@ -56,7 +55,7 @@ pip install -r requirements.txt
 pip install -e .
 
 
-## 2. Production API Launch
+## 2. API Launch
 Start the FastAPI server for local testing:
 
 python main.py
